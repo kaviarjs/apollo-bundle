@@ -1,0 +1,73 @@
+{
+  "name": "@kaviar/apollo-bundle",
+  "version": "1.0.0",
+  "description": "Kaviar Apollo Bundle",
+  "main": "dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kaviarjs/apollo-bundle"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "pretest": "npm run compile",
+    "test": "jest --verbose dist/__tests__/index.js",
+    "test:clean": "jest --clearCache",
+    "test:watch": "jest --verbose --watch dist/__tests__/index.js",
+    "testonly": "npm test",
+    "test:ci": "npm run coverage -- --ci --maxWorkers=2  --reporters=default --reporters=jest-junit",
+    "coverage": "npm test -- --coverage",
+    "coverage:upload": "codecov",
+    "prepublishOnly": "npm run compile",
+    "gen-doc": "typedoc ./src/index.ts --exclude ./src/__tests__ --out typeDocs --tsconfig tsconfig.json"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.16.1",
+    "express": "^4.17.1",
+    "graphql-type-json": "^0.3.1"
+  },
+  "peerDependencies": {
+    "@kaviar/core": "^1.0.2"
+  },
+  "devDependencies": {
+    "@kaviar/core": "^1.0.2",
+    "@kaviar/email-bundle": "^1.0.0",
+    "@kaviar/security-bundle": "^1.0.0",
+    "@kaviar/executor": "^1.0.0",
+    "@kaviar/loader": "^1.0.1",
+    "@types/chai": "^4.2.3",
+    "@types/chai-as-promised": "^7.1.2",
+    "@types/graphql": "^0.11.3",
+    "@types/jest": "^25.2.1",
+    "@types/node": "^8.0.28",
+    "@typescript-eslint/eslint-plugin": "2.3.0",
+    "@typescript-eslint/parser": "2.3.0",
+    "apollo-boost": "^0.4.7",
+    "apollo-cache-inmemory": "^1.6.5",
+    "apollo-client": "^2.6.8",
+    "apollo-link": "^1.2.14",
+    "apollo-link-error": "^1.1.13",
+    "apollo-link-http": "^1.5.17",
+    "apollo-link-ws": "^1.0.20",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^6.6.0",
+    "eslint-config-prettier": "6.3.0",
+    "eslint-plugin-prettier": "3.1.1",
+    "isomorphic-fetch": "^2.2.1",
+    "jest": "^26.0.0",
+    "jest-junit": "^10.0.0",
+    "mocha": "^6.2.2",
+    "prettier": "^2.0.5",
+    "source-map-support": "^0.5.13",
+    "subscriptions-transport-ws": "^0.9.16",
+    "typedoc": "^0.15.0",
+    "typescript": "^3.8.3",
+    "ws": "^7.2.3"
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "license": "MIT"
+}
