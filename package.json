@@ -1,7 +1,8 @@
 {
   "name": "@kaviar/apollo-bundle",
   "version": "1.0.0",
-  "description": "Kaviar Apollo Bundle",
+  "private": true,
+  "description": "Zero-config Apollo/GraphQL solution for Kaviar Framework",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
@@ -23,14 +24,21 @@
   },
   "dependencies": {
     "apollo-server-express": "^2.16.1",
+    "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
     "graphql-type-json": "^0.3.1"
   },
   "peerDependencies": {
-    "@kaviar/core": "^1.0.2"
+    "@kaviar/core": "^1.0.2",
+    "@kaviar/logger": "^1.0.0",
+    "@kaviar/email-bundle": "^1.0.0",
+    "@kaviar/security-bundle": "^1.0.0",
+    "@kaviar/executor": "^1.0.0",
+    "@kaviar/loader": "^1.0.1"
   },
   "devDependencies": {
     "@kaviar/core": "^1.0.2",
+    "@kaviar/logger": "^1.0.0",
     "@kaviar/email-bundle": "^1.0.0",
     "@kaviar/security-bundle": "^1.0.0",
     "@kaviar/executor": "^1.0.0",

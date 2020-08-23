@@ -5,6 +5,7 @@ import { ContainerInstance } from "@kaviar/core";
 
 export interface IApolloBundleConfig {
   port?: number;
+  url?: string;
   apollo?: ApolloServerExpressConfig;
   enableSubscriptions?: boolean;
   middlewares?: any[];
@@ -15,12 +16,11 @@ export interface IRouteType {
   type: "post" | "get" | "put" | "all";
   path: string;
   handler: (
+    container: ContainerInstance,
     req: express.Request,
     res: express.Response,
-    container: ContainerInstance
-  ) => any;
-  urlencoded?: boolean;
-  json?: boolean;
+    next: any
+  ) => Promise<any>;
 }
 
 export interface IGraphQLContext {

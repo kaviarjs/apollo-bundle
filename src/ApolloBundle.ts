@@ -3,6 +3,7 @@ import { Loader, IResolverMap } from "@kaviar/loader";
 import { DateScalar, JSONScalar } from "./scalars";
 import * as http from "http";
 import * as express from "express";
+import * as cookieParser from "cookie-parser";
 import { ApolloServer, ApolloServerExpressConfig } from "apollo-server-express";
 
 import {
@@ -13,10 +14,13 @@ import {
 } from "./events";
 import { IApolloBundleConfig } from "./defs";
 import { ApolloResolverExceptionEvent } from "./events";
+import { IRouteType } from "./defs";
+import { LoggerService } from "@kaviar/logger-bundle";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {
     port: 4000,
+    url: "http://localhost:4000",
     apollo: {},
     enableSubscriptions: false,
     middlewares: [],
@@ -25,6 +29,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   public httpServer: http.Server;
   public app: express.Application;
   public server: ApolloServer;
+  protected logger: LoggerService;
 
   async validate(config) {
     const keys = Object.keys(config.apollo);
@@ -44,10 +49,12 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     // We add the container to the context in the preparation phase
     // As loading should be done in initial phase and we have the container as the first reducer
     const loader = this.get<Loader>(Loader);
-
+    this.logger = this.get<LoggerService>(LoggerService);
     loader.load({
       contextReducers: [this.getContainerContextReducer()],
     });
+
+    await this.initialiseExpress();
   }
 
   async init() {
@@ -55,6 +62,10 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
 
     manager.addListener(KernelAfterInitEvent, async () => {
       await this.setupApolloServer();
+      const ROOT_URL = this.container.get("%ROOT_URL%");
+      this.get<LoggerService>(LoggerService).info(
+        `GraphQL endpoint ready: ${this.config.url}/graphql`
+      );
     });
   }
 
@@ -75,11 +86,8 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     const manager = this.get<EventManager>(EventManager);
 
     // server starting
-    const appUrl = this.kernel.parameters.APP_URL || "http://localhost";
-    console.log("Starting Apollo Server...");
     return new Promise((resolve) => {
       httpServer.listen(this.config.port, (data) => {
-        console.log(`Server ready: ${appUrl}:${this.config.port}/graphql`);
         resolve();
         manager.emit(
           new ApolloServerAfterInitEvent({
@@ -92,6 +100,25 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     });
   }
 
+  protected async initialiseExpress() {
+    const app = express();
+    app.use(
+      (req, res, next) => {
+        res.setHeader("X-Framework", "Kaviar");
+        next();
+      },
+      cookieParser(),
+      express.json(),
+      express.urlencoded({ extended: true })
+    );
+
+    if (this.config.middlewares.length) {
+      app.use(...this.config.middlewares);
+    }
+
+    this.app = app;
+  }
+
   /**
    * This function purely initialises the server
    */
@@ -101,16 +128,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     const manager = this.get<EventManager>(EventManager);
 
     const apolloServer = new ApolloServer(apolloServerConfig);
-    const app = express();
-
-    if (this.config.middlewares.length) {
-      app.use(...this.config.middlewares);
-    }
-
-    app.use((req, res, next) => {
-      res.setHeader("X-Framework", "Kaviar");
-      next();
-    });
+    const { app } = this;
 
     apolloServer.applyMiddleware({ app });
 
@@ -123,6 +141,12 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     this.app = app;
     this.httpServer = httpServer;
     this.server = apolloServer;
+
+    if (this.config.routes) {
+      this.config.routes.forEach((route) => {
+        this.addRoute(route);
+      });
+    }
 
     await manager.emit(
       new ApolloServerBeforeInitEvent({
@@ -165,11 +189,10 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       {
         cors: true,
         formatError: (e) => {
-          console.error(`Error has occured`, JSON.stringify(e, null, 4));
+          this.logger.error(JSON.stringify(e, null, 4));
 
           return {
             message: e.message,
-            locations: e.locations,
             path: e.path,
           };
         },
@@ -294,7 +317,9 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
    * @param path
    * @param handler
    */
-  public addServerSideRoute(path, handler) {
-    // TODO:
+  public addRoute(route: IRouteType) {
+    this.app[route.type](route.path, async (req, res, next) => {
+      await route.handler(this.container, req, res, next);
+    });
   }
 }
