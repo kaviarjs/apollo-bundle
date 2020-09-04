@@ -1,5 +1,5 @@
 import { Bundle, KernelAfterInitEvent, EventManager } from "@kaviar/core";
-import { Loader, IResolverMap } from "@kaviar/loader";
+import { Loader, IResolverMap } from "@kaviar/graphql-bundle";
 import { DateScalar, JSONScalar } from "./scalars";
 import * as http from "http";
 import * as express from "express";
@@ -50,9 +50,6 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     // As loading should be done in initial phase and we have the container as the first reducer
     const loader = this.get<Loader>(Loader);
     this.logger = this.get<LoggerService>(LoggerService);
-    loader.load({
-      contextReducers: [this.getContainerContextReducer()],
-    });
 
     await this.initialiseExpress();
   }
@@ -62,7 +59,6 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
 
     manager.addListener(KernelAfterInitEvent, async () => {
       await this.setupApolloServer();
-      const ROOT_URL = this.container.get("%ROOT_URL%");
       this.get<LoggerService>(LoggerService).info(
         `GraphQL endpoint ready: ${this.config.url}/graphql`
       );
@@ -255,19 +251,11 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   }
 
   /**
-   * Injects container into context
-   */
-  protected getContainerContextReducer() {
-    return async (context) => ({
-      ...context,
-      container: this.container,
-    });
-  }
-
-  /**
    * Applies reducing of context
    */
   protected async applyContextReducers(context: any, reducers: any) {
+    context.container = this.container;
+
     for (const reducer of reducers) {
       context = await reducer(context);
     }

@@ -24,11 +24,12 @@ kernel.addBundle(
     middlewares: [],
 
     // (optional) Server Side Routes
+    // You can also add them from your bundle via `.addRoute()`
     routes: [
       {
-        type: "post",
+        type: "post", // "get", "put", "all"
         path: "/api/payment-handler/:orderId",
-        handler: async (req, res, container) => {},
+        handler: async (container, req, res) => {},
         // These are optional and used for body-parsing
         json: true,
         urlencoded: true,
@@ -45,8 +46,7 @@ import { Bundle } from "@kaviar/core";
 import { Loader } from "@kaviar/apollo-bundle";
 
 class CoreBundle extends Bundle {
-  // You must do your loading at the initialisation phase, not before
-  init() {
+  prepare() {
     const loader = this.get<Loader>(Loader);
 
     loader.load({
@@ -78,8 +78,8 @@ class CoreBundle extends Bundle {
 
 ## Scalars
 
-This package automatically includes the `JSON` and `Date` scalars. The date scalar works with actual timestamp.
+This package automatically includes the `JSON` and `Date` scalars. The date scalar works with timestamp.
 
-## Listen to Exceptions
+## Listening to Exceptions
 
-There is an event that throws when an unresolved exception reaches the resolver function. That event is called `ApolloResolverExceptionEvent` and you can easily hook into it and do something when some resolver errors out, like logging, or sending a warning and so on.
+There is an event that throws when an unresolved exception is raised above resolver function. That event is called `ApolloResolverExceptionEvent` and you can easily hook into it and do something when some resolver errors out, like logging, or sending a warning and so on.

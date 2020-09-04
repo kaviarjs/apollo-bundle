@@ -1,6 +1,6 @@
 import { Kernel, Bundle, ContainerInstance } from "@kaviar/core";
 import { ApolloBundle } from "../ApolloBundle";
-import { Loader } from "@kaviar/loader";
+import { Loader } from "@kaviar/graphql-bundle";
 import createApolloClient from "./apolloClientCreator";
 import { gql } from "apollo-boost";
 import { assert } from "chai";
