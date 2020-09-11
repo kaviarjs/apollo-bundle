@@ -1,12 +1,5 @@
 ApolloBundle quickly bootstraps an Apollo Server within Kaviar's framework. It injects the `container` inside the context and allows you to easily create server-side routes.
 
-## Resources
-
-We advise you to read more about the following concepts:
-
-- [@kaviar/core](https://github.com/kaviarjs/core)
-- [@kaviar/loader](https://github.com/kaviarjs/loader)
-
 ## Usage
 
 ```typescript
@@ -43,7 +36,7 @@ kernel.addBundle(
 
 ```typescript
 import { Bundle } from "@kaviar/core";
-import { Loader } from "@kaviar/apollo-bundle";
+import { Loader } from "@kaviar/graphql-bundle";
 
 class CoreBundle extends Bundle {
   prepare() {
