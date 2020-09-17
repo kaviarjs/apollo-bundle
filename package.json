@@ -1,7 +1,6 @@
 {
   "name": "@kaviar/apollo-bundle",
   "version": "1.0.0",
-  "private": true,
   "description": "Zero-config Apollo/GraphQL solution for Kaviar Framework",
   "main": "dist/index.js",
   "repository": {
