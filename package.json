@@ -32,7 +32,7 @@
     "@kaviar/logger-bundle": "^1.0.0",
     "@kaviar/email-bundle": "^1.0.0",
     "@kaviar/security-bundle": "^1.0.0",
-    "@kaviar/graphql-bundle": "^1.0.1"
+    "@kaviar/graphql-bundle": "^1.0.0"
   },
   "devDependencies": {
     "@kaviar/core": "^1.0.2",
