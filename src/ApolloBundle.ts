@@ -1,6 +1,5 @@
 import { Bundle, KernelAfterInitEvent, EventManager } from "@kaviar/core";
 import { Loader, IResolverMap } from "@kaviar/graphql-bundle";
-import { DateScalar, JSONScalar } from "./scalars";
 import * as http from "http";
 import * as express from "express";
 import * as cookieParser from "cookie-parser";
@@ -159,8 +158,6 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   protected getApolloConfig(): ApolloServerExpressConfig {
     const loader = this.get<Loader>(Loader);
 
-    loader.load(DateScalar);
-    loader.load(JSONScalar);
     loader.load({
       typeDefs: `
         type Query { framework: String }

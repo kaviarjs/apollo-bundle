@@ -69,10 +69,6 @@ class CoreBundle extends Bundle {
 }
 ```
 
-## Scalars
-
-This package automatically includes the `JSON` and `Date` scalars. The date scalar works with timestamp.
-
 ## Listening to Exceptions
 
 There is an event that throws when an unresolved exception is raised above resolver function. That event is called `ApolloResolverExceptionEvent` and you can easily hook into it and do something when some resolver errors out, like logging, or sending a warning and so on.
