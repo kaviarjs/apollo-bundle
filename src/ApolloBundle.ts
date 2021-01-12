@@ -76,7 +76,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   /**
    * Starts the http server listening process
    */
-  protected async startServer() {
+  protected async startServer(): Promise<void> {
     const { app, httpServer, server } = this;
     const manager = this.get<EventManager>(EventManager);
 
@@ -169,7 +169,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       },
     });
 
-    let {
+    const {
       typeDefs,
       resolvers,
       schemaDirectives,
