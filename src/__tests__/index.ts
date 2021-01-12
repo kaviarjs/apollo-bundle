@@ -8,6 +8,34 @@ import { PubSub } from "apollo-server-express";
 
 let currentServer;
 
+async function createEcosystemWithInit(
+  loadable: any,
+  otherOptions: any = {}
+): Promise<Kernel> {
+  class MyBundle extends Bundle {
+    async init() {
+      this.get<Loader>(Loader).load(loadable);
+    }
+  }
+
+  const kernel = new Kernel({
+    bundles: [
+      new ApolloBundle({
+        port: 4000,
+        enableSubscriptions: true,
+        ...otherOptions,
+      }),
+      new MyBundle(),
+    ],
+  });
+
+  await kernel.init();
+
+  currentServer = kernel.container.get(ApolloBundle).httpServer;
+
+  return kernel;
+}
+
 describe("ApolloBundle", () => {
   afterEach(() => {
     if (currentServer) {
@@ -91,7 +119,7 @@ describe("ApolloBundle", () => {
 
     const MESSAGE = "1,2,3";
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       observable.subscribe({
         next(result) {
           const {
@@ -114,7 +142,7 @@ describe("ApolloBundle", () => {
   });
 
   it("Should work with middleware from express", async () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       createEcosystemWithInit(
         {
           typeDefs: `
@@ -148,7 +176,7 @@ describe("ApolloBundle", () => {
   });
 
   it("Should be able to access the container from within", async () => {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       createEcosystemWithInit({
         typeDefs: `
             type Query { something: String }
@@ -175,31 +203,3 @@ describe("ApolloBundle", () => {
     });
   });
 });
-
-async function createEcosystemWithInit(
-  loadable: any,
-  otherOptions: any = {}
-): Promise<Kernel> {
-  class MyBundle extends Bundle {
-    async init() {
-      this.get<Loader>(Loader).load(loadable);
-    }
-  }
-
-  const kernel = new Kernel({
-    bundles: [
-      new ApolloBundle({
-        port: 4000,
-        enableSubscriptions: true,
-        ...otherOptions,
-      }),
-      new MyBundle(),
-    ],
-  });
-
-  await kernel.init();
-
-  currentServer = kernel.container.get(ApolloBundle).httpServer;
-
-  return kernel;
-}
