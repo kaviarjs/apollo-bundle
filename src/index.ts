@@ -1,3 +1,4 @@
+import "./declarations";
 import { Loader } from "@kaviar/graphql-bundle";
 import * as express from "express";
 export { ApolloBundle } from "./ApolloBundle";

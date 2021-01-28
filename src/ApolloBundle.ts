@@ -1,4 +1,9 @@
-import { Bundle, KernelAfterInitEvent, EventManager } from "@kaviar/core";
+import {
+  Bundle,
+  KernelAfterInitEvent,
+  EventManager,
+  Kernel,
+} from "@kaviar/core";
 import { Loader, IResolverMap } from "@kaviar/graphql-bundle";
 import * as http from "http";
 import * as express from "express";
@@ -15,13 +20,14 @@ import { IApolloBundleConfig } from "./defs";
 import { ApolloResolverExceptionEvent } from "./events";
 import { IRouteType } from "./defs";
 import { LoggerService } from "@kaviar/logger-bundle";
+import { onError } from "apollo-link-error";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {
     port: 4000,
     url: "http://localhost:4000",
     apollo: {},
-    enableSubscriptions: false,
+    enableSubscriptions: true,
     middlewares: [],
   };
 
@@ -206,7 +212,11 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
    */
   protected createContext(contextReducers = []) {
     const contextHandler = async (context) => {
-      context = await this.applyContextReducers(context, contextReducers);
+      try {
+        context = await this.applyContextReducers(context, contextReducers);
+      } catch (e) {
+        console.error(e);
+      }
 
       return context;
     };
@@ -254,7 +264,12 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     context.container = this.container;
 
     for (const reducer of reducers) {
-      context = await reducer(context);
+      try {
+        context = await reducer(context);
+      } catch (e) {
+        console.error(`Error found in context reducers: `, e);
+        throw e;
+      }
     }
 
     return context;
