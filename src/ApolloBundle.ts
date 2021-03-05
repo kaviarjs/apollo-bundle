@@ -56,7 +56,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     const loader = this.get<Loader>(Loader);
     this.logger = this.get<LoggerService>(LoggerService);
 
-    await this.initialiseExpress();
+    await this.instantiateExpress();
   }
 
   async init() {
@@ -101,7 +101,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     });
   }
 
-  protected async initialiseExpress() {
+  protected async instantiateExpress() {
     const app = express();
     app.use(
       (req, res, next) => {
@@ -212,13 +212,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
    */
   protected createContext(contextReducers = []) {
     const contextHandler = async (context) => {
-      try {
-        context = await this.applyContextReducers(context, contextReducers);
-      } catch (e) {
-        console.error(e);
-      }
-
-      return context;
+      return await this.applyContextReducers(context, contextReducers);
     };
 
     return contextHandler;
