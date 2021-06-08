@@ -57,7 +57,7 @@
     "isomorphic-fetch": "^2.2.1",
     "jest": "^26.0.0",
     "jest-junit": "^10.0.0",
-    "mocha": "^6.2.2",
+    "mocha": "^9.0.0",
     "prettier": "^2.0.5",
     "source-map-support": "^0.5.13",
     "subscriptions-transport-ws": "^0.9.16",
