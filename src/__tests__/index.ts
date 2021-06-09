@@ -21,7 +21,7 @@ async function createEcosystemWithInit(
   const kernel = new Kernel({
     bundles: [
       new ApolloBundle({
-        port: 4000,
+        port: 6000,
         enableSubscriptions: true,
         ...otherOptions,
       }),
@@ -60,7 +60,7 @@ describe("ApolloBundle", () => {
 
     currentServer = kernel.container.get(ApolloBundle).httpServer;
 
-    const client = createApolloClient(4000);
+    const client = createApolloClient(6000);
 
     const result = await client.query({
       query: gql`
@@ -107,7 +107,7 @@ describe("ApolloBundle", () => {
       },
     });
 
-    const client = createApolloClient(4000);
+    const client = createApolloClient(6000);
 
     const observable = client.subscribe({
       query: gql`
@@ -162,7 +162,7 @@ describe("ApolloBundle", () => {
           ],
         }
       ).then((kernel) => {
-        const client = createApolloClient(4000);
+        const client = createApolloClient(6000);
 
         client.query({
           query: gql`
@@ -190,7 +190,7 @@ describe("ApolloBundle", () => {
           },
         },
       }).then((kernel) => {
-        const client = createApolloClient(4000);
+        const client = createApolloClient(6000);
 
         client.query({
           query: gql`

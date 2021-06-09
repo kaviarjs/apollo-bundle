@@ -9,7 +9,7 @@ import { split } from "apollo-link";
 import { getMainDefinition } from "apollo-utilities";
 import * as ws from "ws";
 
-export default function getClient(port: number = 4000): ApolloClient<any> {
+export default function getClient(port: number = 6000): ApolloClient<any> {
   const wsLink = new WebSocketLink({
     uri: `ws://localhost:${port}/graphql`,
     options: {
