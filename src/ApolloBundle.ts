@@ -17,10 +17,8 @@ import {
   WebSocketOnDisconnectEvent,
 } from "./events";
 import { IApolloBundleConfig } from "./defs";
-import { ApolloResolverExceptionEvent } from "./events";
 import { IRouteType } from "./defs";
 import { LoggerService } from "@kaviar/logger-bundle";
-import { onError } from "apollo-link-error";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {

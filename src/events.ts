@@ -9,17 +9,6 @@ export interface IApolloServerInitialisation {
   app?: express.Application; // express() app
 }
 
-/**
- * This happens when an exception occurs in the resolver that hasn't been caught
- * This doesn't allow you to prevent it from propagating, but you can log it.
- */
-export class ApolloResolverExceptionEvent extends Event<{
-  resolverType: "Query" | "Mutation" | "Subscription" | string;
-  resolverName: string;
-  arguments: any[];
-  exception: Error;
-}> {}
-
 export class ApolloServerBeforeInitEvent extends Event<
   IApolloServerInitialisation
 > {}
