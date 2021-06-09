@@ -182,8 +182,6 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       contextReducers,
     } = loader.getSchema();
 
-    this.manipulateResolversToEmitExceptionEvent(resolvers);
-
     return Object.assign(
       {
         cors: true,
@@ -270,41 +268,17 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   }
 
   /**
-   * This just wraps the functions to also emit an error event when this happens
-   * @param resolvers
-   */
-  protected manipulateResolversToEmitExceptionEvent(resolvers: IResolverMap) {
-    const eventManager = this.get<EventManager>(EventManager);
-    const resolverKeys = ["Query", "Mutation"];
-
-    resolverKeys.forEach((key) => {
-      for (const name in resolvers[key]) {
-        const oldFn = resolvers[key][name];
-        resolvers[key][name] = async (...args) => {
-          try {
-            return await oldFn.call(null, ...args);
-          } catch (e) {
-            await eventManager.emit(
-              new ApolloResolverExceptionEvent({
-                arguments: args,
-                resolverType: key,
-                resolverName: name,
-                exception: e,
-              })
-            );
-
-            throw e;
-          }
-        };
-      }
-    });
-  }
-
-  /**
    * Add a middleware for express() before server initialises
    */
   public addMiddleware(middleware) {
     this.config.middlewares.push(middleware);
+  }
+
+  /**
+   * Shutdown the http server so it's no longer hanging
+   */
+  async shutdown() {
+    this.httpServer.close();
   }
 
   /**

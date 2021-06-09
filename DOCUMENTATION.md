@@ -68,7 +68,3 @@ class CoreBundle extends Bundle {
   }
 }
 ```
-
-## Listening to Exceptions
-
-There is an event that throws when an unresolved exception is raised above resolver function. That event is called `ApolloResolverExceptionEvent` and you can easily hook into it and do something when some resolver errors out, like logging, or sending a warning and so on.
