@@ -27,7 +27,7 @@
     "express": "^4.17.1"
   },
   "peerDependencies": {
-    "@kaviar/core": "^1.1.1"
+    "@kaviar/core": "^1.2.1"
   },
   "devDependencies": {
     "@kaviar/core": "^1.1.1",
