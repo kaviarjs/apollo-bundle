@@ -62,9 +62,10 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
 
     manager.addListener(KernelAfterInitEvent, async () => {
       await this.setupApolloServer();
-      this.get<LoggerService>(LoggerService).info(
-        `GraphQL endpoint ready: ${this.config.url}/graphql`
-      );
+      const logger = this.container.get(LoggerService);
+      logger.info(`HTTP Server listening on port: ${this.config.port}`);
+      const url = `${this.config.url}/graphql`.replace("//", "/");
+      logger.info(`GraphQL endpoint ready: ${url}`);
     });
   }
 
