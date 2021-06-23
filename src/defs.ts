@@ -28,4 +28,10 @@ export interface IGraphQLContext {
   res: express.Response;
   connection?: ExecutionParams;
   container: ContainerInstance;
+  /**
+   * Connection Parameters from Websocket
+   */
+  connectionParams: {
+    [key: string]: any;
+  };
 }

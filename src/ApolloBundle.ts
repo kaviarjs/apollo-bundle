@@ -219,11 +219,14 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
    * Creates the object necessary to pass `subscriptions` to apollo
    */
   protected createSubscriptions(contextReducers: any) {
-    const manager = this.get<EventManager>(EventManager);
+    const manager = this.container.get(EventManager);
 
     return {
       onConnect: async (connectionParams, webSocket, context) => {
-        context = await this.applyContextReducers(context, contextReducers);
+        context = await this.applyContextReducers(
+          Object.assign({ connectionParams }, context),
+          contextReducers
+        );
 
         await manager.emit(
           new WebSocketOnConnectEvent({
