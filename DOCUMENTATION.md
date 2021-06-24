@@ -28,6 +28,12 @@ kernel.addBundle(
         urlencoded: true,
       },
     ],
+
+    // Use uploads: false if you want to disable support for file uploading via graphql-upload
+    uploads: {
+      maxFileSize: 1024 * 1024 * 1000, // 1000 mega bytes, default is 10e9
+      maxFiles: 10, // how many files can a user upload at once?
+    },
   })
 );
 ```
