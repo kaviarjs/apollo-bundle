@@ -2,7 +2,7 @@ import { ApolloServerExpressConfig } from "apollo-server-express";
 import * as express from "express";
 import { ExecutionParams } from "subscriptions-transport-ws";
 import { ContainerInstance } from "@kaviar/core";
-
+import { UploadOptions } from "graphql-upload";
 export interface IApolloBundleConfig {
   port?: number;
   url?: string;
@@ -10,6 +10,7 @@ export interface IApolloBundleConfig {
   enableSubscriptions?: boolean;
   middlewares?: any[];
   routes?: IRouteType[];
+  uploads?: false | UploadOptions;
 }
 
 export interface IRouteType {

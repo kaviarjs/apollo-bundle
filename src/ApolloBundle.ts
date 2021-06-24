@@ -19,6 +19,7 @@ import {
 import { IApolloBundleConfig } from "./defs";
 import { IRouteType } from "./defs";
 import { LoggerService } from "@kaviar/logger-bundle";
+import { graphqlUploadExpress } from "graphql-upload";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {
@@ -27,6 +28,10 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     apollo: {},
     enableSubscriptions: true,
     middlewares: [],
+    uploads: {
+      maxFileSize: 1000000000,
+      maxFiles: 10,
+    },
   };
 
   public httpServer: http.Server;
@@ -130,6 +135,10 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
     const apolloServer = new ApolloServer(apolloServerConfig);
     const { app } = this;
 
+    if (this.config.uploads !== false) {
+      app.use("/graphql", graphqlUploadExpress(this.config.uploads));
+    }
+
     apolloServer.applyMiddleware({ app });
 
     const httpServer = http.createServer(app);
@@ -200,6 +209,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
         schemaDirectives,
         subscriptions: this.createSubscriptions(contextReducers),
         context: this.createContext(contextReducers),
+        uploads: false,
       }
     );
   }
