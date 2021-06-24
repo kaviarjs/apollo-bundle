@@ -1,6 +1,6 @@
 {
   "name": "@kaviar/apollo-bundle",
-  "version": "1.1.8",
+  "version": "1.2.0-alpha",
   "description": "Zero-config Apollo/GraphQL solution for Kaviar Framework",
   "main": "dist/index.js",
   "repository": {
@@ -25,7 +25,7 @@
     "apollo-server-express": "^2.19.2",
     "cookie-parser": "^1.4.5",
     "express": "^4.17.1",
-    "graphql-upload": "^8.1.0"
+    "graphql-upload": "^12.0.0"
   },
   "peerDependencies": {
     "@kaviar/core": "^1.2.1"
@@ -55,7 +55,7 @@
     "eslint": "^6.6.0",
     "eslint-config-prettier": "6.3.0",
     "eslint-plugin-prettier": "3.1.1",
-    "isomorphic-fetch": "^2.2.1",
+    "isomorphic-fetch": "^3.0.0",
     "jest": "^26.0.0",
     "jest-junit": "^10.0.0",
     "mocha": "^6.2.2",
