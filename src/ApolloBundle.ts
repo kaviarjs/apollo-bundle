@@ -19,7 +19,7 @@ import {
 import { IApolloBundleConfig } from "./defs";
 import { IRouteType } from "./defs";
 import { LoggerService } from "@kaviar/logger-bundle";
-import { graphqlUploadExpress } from "graphql-upload";
+import { GraphQLUpload, graphqlUploadExpress } from "graphql-upload";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {
@@ -182,6 +182,17 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
         },
       },
     });
+
+    if (this.config.uploads !== false) {
+      loader.load({
+        typeDefs: `
+          scalar Upload
+        `,
+        resolvers: {
+          Upload: GraphQLUpload,
+        },
+      });
+    }
 
     const {
       typeDefs,
