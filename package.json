@@ -52,7 +52,7 @@
     "apollo-link-ws": "^1.0.20",
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "eslint": "^6.6.0",
+    "eslint": "^7.29.0",
     "eslint-config-prettier": "6.3.0",
     "eslint-plugin-prettier": "3.1.1",
     "isomorphic-fetch": "^3.0.0",
