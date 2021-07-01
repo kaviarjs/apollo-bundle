@@ -3,6 +3,7 @@ import {
   KernelAfterInitEvent,
   EventManager,
   Kernel,
+  Exception,
 } from "@kaviar/core";
 import { Loader, IResolverMap } from "@kaviar/graphql-bundle";
 import * as http from "http";
@@ -20,6 +21,7 @@ import { IApolloBundleConfig } from "./defs";
 import { IRouteType } from "./defs";
 import { LoggerService } from "@kaviar/logger-bundle";
 import { GraphQLUpload, graphqlUploadExpress } from "graphql-upload";
+import { GraphQLError } from "../../graphql-final/error/GraphQLError";
 
 export class ApolloBundle extends Bundle<IApolloBundleConfig> {
   defaultConfig = {
@@ -201,16 +203,29 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       contextReducers,
     } = loader.getSchema();
 
-    return Object.assign(
+    const config: ApolloServerExpressConfig = Object.assign(
       {
         cors: true,
-        formatError: (e) => {
+        formatError: (e: GraphQLError) => {
           this.logger.error(JSON.stringify(e, null, 4));
 
-          return {
+          if (e instanceof Exception) {
+            return {
+              message: e.getMessage(),
+              code: e.getCode(),
+            };
+          }
+
+          const response = {
             message: e.message,
             path: e.path,
           };
+
+          if (e.originalError instanceof Exception) {
+            Object.assign(response, { code: e.originalError.getCode() });
+          }
+
+          return response;
         },
       },
       this.config.apollo,
@@ -223,6 +238,8 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
         uploads: false,
       }
     );
+
+    return config;
   }
 
   /**
@@ -282,7 +299,7 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       try {
         context = await reducer(context);
       } catch (e) {
-        console.error(`Error found in context reducers: `, e);
+        this.logger.error(`Error was found when creating context: `, e);
         throw e;
       }
     }
