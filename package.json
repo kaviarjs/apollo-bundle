@@ -41,7 +41,7 @@
     "@types/graphql": "^0.11.3",
     "@types/jest": "^25.2.3",
     "@types/node": "^15.12.5",
-    "@typescript-eslint/eslint-plugin": "2.3.0",
+    "@typescript-eslint/eslint-plugin": "2.34.0",
     "@typescript-eslint/parser": "2.3.0",
     "apollo-boost": "^0.4.7",
     "apollo-cache-inmemory": "^1.6.5",
