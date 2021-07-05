@@ -71,7 +71,8 @@ export class ApolloBundle extends Bundle<IApolloBundleConfig> {
       await this.setupApolloServer();
       const logger = this.container.get(LoggerService);
       logger.info(`HTTP Server listening on port: ${this.config.port}`);
-      const url = `${this.config.url}/graphql`.replace("//", "/");
+      let url = this.config.url;
+      url += url.endsWith("/") ? "graphql" : "/graphql";
       logger.info(`GraphQL endpoint ready: ${url}`);
     });
   }
